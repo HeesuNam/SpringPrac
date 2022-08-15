@@ -2,6 +2,7 @@ package com.hw.prac2.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +40,11 @@ public class CourseController {
     @PutMapping("/api/courses/{id}")
     public Long updateCourse(@PathVariable Long id, @RequestBody CourseRequestDTO requestDto) {
         return courseService.update(id, requestDto);
+    }
+
+    @DeleteMapping("/api/courses/{id}")
+    public Long deleteCourse(@PathVariable Long id) {
+        courseRepository.deleteById(id);
+        return id;
     }
 }
