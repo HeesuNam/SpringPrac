@@ -1,51 +1,55 @@
-package com.hw.prac1;
+package com.hw.prac1.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
 public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int age;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String job;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public int getAge() {
-        return this.age;
-    }
-
-    public String getAddress() {
-        return this.address;
-    }
-
-    public String getJob() {
-        return this.job;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    public Person() {
-
-    }
 
     public Person(String name, int age, String address, String job) {
         this.name = name;
         this.age = age;
         this.address = address;
         this.job = job;
+    }
+
+    public Person(PersonRequestDTO requestDTO) {
+        this.name = requestDTO.getName();
+        this.age = requestDTO.getAge();
+        this.address = requestDTO.getAddress();
+        this.job = requestDTO.getJob();
+    }
+
+    public void update(PersonRequestDTO requestDTO) {
+        this.name = requestDTO.getName();
+        this.age = requestDTO.getAge();
+        this.address = requestDTO.getAddress();
+        this.job = requestDTO.getJob();
     }
 }
