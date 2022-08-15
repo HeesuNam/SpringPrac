@@ -14,8 +14,7 @@ public class CourseService {
     // final: 서비스에게 꼭 필요한 녀석임을 명시
     private final CourseRepository courseRepository;
 
-    // 생성자를 통해, Service 클래스를 만들 때 꼭 Repository를 넣어주도록
-    // 스프링에게 알려줌
+    // 생성자를 통해, Service 클래스를 만들 때 꼭 Repository를 넣어주도록 스프링에게 알려줌
     public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }

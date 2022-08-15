@@ -8,17 +8,19 @@ import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor // 기본생성자를 대신 생성해줍니다.
-@Entity // 테이블임을 나타냅니다.
+@Setter
+@NoArgsConstructor // 기본생성자를 대신 생성
+@Entity // 테이블임을 나타냄
 public class Course extends Timestamped {
 
-    @Id // ID 값, Primary Key로 사용하겠다는 뜻입니다.
-    @GeneratedValue(strategy = GenerationType.AUTO) // 자동 증가 명령입니다.
+    @Id // ID 값, Primary Key로 사용
+    @GeneratedValue(strategy = GenerationType.AUTO) // 자동 증가 명령
     private Long id;
 
-    @Column(nullable = false) // 컬럼 값이고 반드시 값이 존재해야 함을 나타냅니다.
+    @Column(nullable = false) // 컬럼 값이고 반드시 값이 존재해야 함
     private String title;
 
     @Column(nullable = false)
@@ -29,20 +31,14 @@ public class Course extends Timestamped {
         this.tutor = tutor;
     }
 
+    public Course(CourseRequestDTO requestDto) {
+        this.title = requestDto.getTilte();
+        this.tutor = requestDto.getTutor();
+    }
+
     public void update(CourseRequestDTO course) {
         this.title = course.getTilte();
         this.tutor = course.getTutor();
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setTutor(String tutor) {
-        this.tutor = tutor;
-    }
 }
