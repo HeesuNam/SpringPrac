@@ -1,5 +1,6 @@
 package com.sparta.prac3.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +32,8 @@ public class MemoController {
 
     @GetMapping("/api/memos")
     public List<Memo> getMemo() {
-        return memoRepository.findAllByOrderByModifiedAtDesc();
+        return memoRepository.findALLByModifiedAtBetweenOrderByModifiedAtDesc(LocalDateTime.now().minusDays(1),
+                LocalDateTime.now());
     }
 
     @DeleteMapping("/api/memos/{id}")
