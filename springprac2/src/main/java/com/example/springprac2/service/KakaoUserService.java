@@ -24,6 +24,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -107,11 +108,19 @@ public class KakaoUserService {
     }
 
     private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+
         // DB 에 중복된 Kakao Id 가 있는지 확인
         String kakaoId = kakaoUserInfo.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
+            String kakaoEmail = kakaoUserInfo.getEmail();
+            User found = userRepository.findByEmail(kakaoEmail).orElse(null);
+            if (found != null) {
+                found.setKakaoId(kakaoId);
+                userRepository.save(found);
+                return found;
+            }
             // 회원가입
             // username: kakao nickname
             String nickname = kakaoUserInfo.getNickname();
@@ -120,12 +129,10 @@ public class KakaoUserService {
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
 
-            // email: kakao email
-            String email = kakaoUserInfo.getEmail();
             // role: 일반 사용자
             UserRoleEnum role = UserRoleEnum.USER;
 
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new User(nickname, encodedPassword, kakaoEmail, role, kakaoId);
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
