@@ -1,6 +1,7 @@
 package com.example.springprac2.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,6 @@ import com.example.springprac2.model.Product;
 import com.example.springprac2.model.UserRoleEnum;
 import com.example.springprac2.security.UserDetailsImpl;
 import com.example.springprac2.service.ProductService;
-
-import java.util.List;
 
 @RestController // JSON으로 데이터를 주고받음을 선언합니다.
 public class ProductController {
@@ -48,17 +47,28 @@ public class ProductController {
 
     // 로그인한 회원이 등록한 관심 상품 조회
     @GetMapping("/api/products")
-    public List<Product> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Page<Product> getProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 회원 테이블의 ID
         Long userId = userDetails.getUser().getId();
+        page = page - 1;
 
-        return productService.getProducts(userId);
+        return productService.getProducts(page, size, sortBy, isAsc, userId);
     }
 
     // 관리자용 상품 전체 조회
     @Secured(value = UserRoleEnum.Authority.ADMIN)
     @GetMapping("/api/admin/products")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<Product> getAllProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc) {
+        page = page - 1;
+        return productService.getAllProducts(page, size, sortBy, isAsc);
     }
 }
