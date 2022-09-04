@@ -8,4 +8,6 @@ import com.example.springprac2.model.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     public Page<Product> findAllByUserId(Long userId, Pageable Pageable);
+
+    public Page<Product> findAllByUserIdAndFolderList_Id(Long id, Long folderId, Pageable pageable);
 }

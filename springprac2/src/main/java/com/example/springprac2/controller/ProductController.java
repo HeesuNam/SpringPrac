@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.springprac2.Dto.ProductMypriceRequestDto;
 import com.example.springprac2.Dto.ProductRequestDto;
 import com.example.springprac2.model.Product;
+import com.example.springprac2.model.User;
 import com.example.springprac2.model.UserRoleEnum;
 import com.example.springprac2.security.UserDetailsImpl;
 import com.example.springprac2.service.ProductService;
@@ -60,8 +61,8 @@ public class ProductController {
         return productService.getProducts(page, size, sortBy, isAsc, userId);
     }
 
-    // 관리자용 상품 전체 조회
-    @Secured(value = UserRoleEnum.Authority.ADMIN)
+    // (관리자용) 전체 상품 조회
+    @Secured(UserRoleEnum.Authority.ADMIN)
     @GetMapping("/api/admin/products")
     public Page<Product> getAllProducts(
             @RequestParam("page") int page,
@@ -70,5 +71,16 @@ public class ProductController {
             @RequestParam("isAsc") boolean isAsc) {
         page = page - 1;
         return productService.getAllProducts(page, size, sortBy, isAsc);
+    }
+
+    // 상품에 폴더 추가
+    @PostMapping("/api/products/{productId}/folder")
+    public Long addFolder(
+            @PathVariable Long productId,
+            @RequestParam Long folderId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        Product product = productService.addFolder(productId, folderId, user);
+        return product.getId();
     }
 }

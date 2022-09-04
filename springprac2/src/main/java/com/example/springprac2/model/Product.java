@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 import com.example.springprac2.Dto.ProductRequestDto;
@@ -39,8 +41,12 @@ public class Product {
     @Column(nullable = false)
     private Long userId;
 
+    @ManyToMany
+    private List<Folder> folderList;
+
     // 관심 상품 생성 시 이용합니다.
     public Product(ProductRequestDto requestDto, Long userId) {
+        // 입력값 Validation
         ProductValidator.validateProductInput(requestDto, userId);
 
         // 관심상품을 등록한 회원 Id 저장
@@ -50,5 +56,9 @@ public class Product {
         this.link = requestDto.getLink();
         this.lprice = requestDto.getLprice();
         this.myprice = 0;
+    }
+
+    public void addFolder(Folder folder) {
+        this.folderList.add(folder);
     }
 }
